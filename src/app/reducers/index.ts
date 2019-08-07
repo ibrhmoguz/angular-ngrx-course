@@ -2,6 +2,9 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import { User } from '../model/user.model';
 import { AuthActionTypes } from '../auth/auth.actions';
+import { storeFreeze } from 'ngrx-store-freeze';
+import { routerReducer } from '@ngrx/router-store';
+import { RouterStateUrl } from '../shared/utils';
 
 type AuthState = {
   loggedIn: boolean;
@@ -15,6 +18,7 @@ const initialAuthState: AuthState = {
 
 export interface AppState {
   auth: AuthState;
+  router: any;
 }
 
 function authReducer(state: AuthState = initialAuthState, action): AuthState {
@@ -30,8 +34,9 @@ function authReducer(state: AuthState = initialAuthState, action): AuthState {
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-  auth: authReducer
+  auth: authReducer,
+  router: routerReducer
 };
 
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [] : [];
+export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [storeFreeze] : [];

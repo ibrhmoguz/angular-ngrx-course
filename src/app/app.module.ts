@@ -16,11 +16,12 @@ import { AuthModule } from "./auth/auth.module";
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { RouterStateSerializer, StoreRouterConnectingModule } from "@ngrx/router-store";
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import { EffectsModule } from '@ngrx/effects';
 import { reducers, metaReducers } from './reducers';
 import { AuthGuard } from './auth/auth.guard';
+import { CustomSerializer } from './shared/utils';
 
 
 const routes: Routes = [
@@ -30,7 +31,7 @@ const routes: Routes = [
         canActivate: [AuthGuard],
     },
     {
-        path: "**",
+        path: '**',
         redirectTo: '/'
     }
 ];
@@ -53,7 +54,8 @@ const routes: Routes = [
         AuthModule.forRoot(),
         StoreModule.forRoot(reducers, { metaReducers }),
         !environment.production ? StoreDevtoolsModule.instrument() : [],
-        EffectsModule.forRoot([])
+        EffectsModule.forRoot([]),
+        StoreRouterConnectingModule.forRoot({ serializer: CustomSerializer })
     ],
     providers: [],
     bootstrap: [AppComponent]
